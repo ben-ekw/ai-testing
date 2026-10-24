@@ -124,6 +124,9 @@
             font-weight: 700;
             letter-spacing: -0.05em;
             line-height: 1.02;
+            /* Room for descenders so background-clip: text doesn't cut them off */
+            padding-bottom: 0.12em;
+            margin-bottom: -0.12em;
             /* Brushed-steel sheen */
             background: linear-gradient(100deg, #1a1a1c 0%, #3a3a3e 30%, #8a8a8f 48%, #3a3a3e 62%, #1a1a1c 100%);
             background-size: 220% auto;
@@ -248,7 +251,7 @@
     <main class="container">
         <section class="hero">
             <span class="badge">Now live</span>
-            <h1>Hello World</h1>
+            <h1>My Worlds</h1>
             <p>A clean, modern starting point for something great. Fast, responsive, and built to grow with your ideas.</p>
             <div class="actions">
                 <a href="#features" class="btn primary">Get started</a>
