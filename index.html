@@ -4,8 +4,259 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Website</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0d17;
+            --surface: rgba(255, 255, 255, 0.04);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #e8eaf2;
+            --muted: #9aa0b4;
+            --accent-1: #7c5cff;
+            --accent-2: #00d4ff;
+            --accent-3: #ff5ca8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated gradient blobs */
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.45;
+            z-index: -1;
+            animation: float 18s ease-in-out infinite;
+        }
+        .blob.one   { width: 480px; height: 480px; background: var(--accent-1); top: -120px; left: -100px; }
+        .blob.two   { width: 420px; height: 420px; background: var(--accent-2); bottom: -140px; right: -80px; animation-delay: -6s; }
+        .blob.three { width: 320px; height: 320px; background: var(--accent-3); top: 40%; left: 55%; animation-delay: -12s; opacity: 0.3; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33%      { transform: translate(40px, -30px) scale(1.08); }
+            66%      { transform: translate(-30px, 30px) scale(0.95); }
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+        /* Nav */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(14px);
+            background: rgba(11, 13, 23, 0.6);
+            border-bottom: 1px solid var(--border);
+        }
+        nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+        .logo {
+            font-weight: 800;
+            font-size: 1.15rem;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            text-decoration: none;
+        }
+        .logo span {
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        nav ul { display: flex; gap: 28px; list-style: none; }
+        nav a.link {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        nav a.link:hover { color: var(--text); }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 120px 0 100px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: var(--surface);
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-bottom: 28px;
+        }
+        .badge::before {
+            content: "";
+            display: inline-block;
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #3ee08f;
+            margin-right: 8px;
+            box-shadow: 0 0 10px #3ee08f;
+        }
+        h1 {
+            font-size: clamp(3rem, 9vw, 6.5rem);
+            font-weight: 800;
+            letter-spacing: -0.045em;
+            line-height: 1.02;
+            background: linear-gradient(120deg, #fff 20%, var(--accent-2) 55%, var(--accent-1) 80%, var(--accent-3));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: shine 8s linear infinite;
+        }
+        @keyframes shine { to { background-position: 200% center; } }
+
+        .hero p {
+            max-width: 580px;
+            margin: 24px auto 40px;
+            font-size: 1.2rem;
+            color: var(--muted);
+        }
+        .actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+        .btn.primary {
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            box-shadow: 0 10px 30px -10px rgba(124, 92, 255, 0.7);
+        }
+        .btn.primary:hover { transform: translateY(-2px); box-shadow: 0 16px 40px -10px rgba(124, 92, 255, 0.9); }
+        .btn.ghost {
+            color: var(--text);
+            border: 1px solid var(--border);
+            background: var(--surface);
+        }
+        .btn.ghost:hover { background: rgba(255, 255, 255, 0.08); transform: translateY(-2px); }
+
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            padding-bottom: 100px;
+        }
+        .card {
+            padding: 32px;
+            border-radius: 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            transition: transform 0.25s, border-color 0.25s;
+        }
+        .card:hover { transform: translateY(-4px); border-color: rgba(124, 92, 255, 0.5); }
+        .icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, rgba(124, 92, 255, 0.25), rgba(0, 212, 255, 0.25));
+        }
+        .card h3 { font-size: 1.2rem; margin-bottom: 8px; letter-spacing: -0.01em; }
+        .card p { color: var(--muted); font-size: 0.97rem; }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 32px 0;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 640px) {
+            nav ul { display: none; }
+            .hero { padding: 80px 0 70px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .blob, h1 { animation: none; }
+            html { scroll-behavior: auto; }
+        }
+    </style>
 </head>
 <body>
-    <h1>Hi World</h1>
+    <div class="blob one"></div>
+    <div class="blob two"></div>
+    <div class="blob three"></div>
+
+    <nav>
+        <div class="container">
+            <a href="#" class="logo">My<span>Website</span></a>
+            <ul>
+                <li><a class="link" href="#features">Features</a></li>
+                <li><a class="link" href="#about">About</a></li>
+                <li><a class="link" href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero">
+            <span class="badge">Now live</span>
+            <h1>Hi World</h1>
+            <p>A clean, modern starting point for something great. Fast, responsive, and built to grow with your ideas.</p>
+            <div class="actions">
+                <a href="#features" class="btn primary">Get started</a>
+                <a href="#about" class="btn ghost">Learn more</a>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <div class="card">
+                <div class="icon">⚡</div>
+                <h3>Lightning fast</h3>
+                <p>A single, lightweight page that loads instantly on any device.</p>
+            </div>
+            <div class="card" id="about">
+                <div class="icon">🎨</div>
+                <h3>Beautiful by default</h3>
+                <p>Thoughtful typography, soft gradients, and subtle motion throughout.</p>
+            </div>
+            <div class="card">
+                <div class="icon">📱</div>
+                <h3>Fully responsive</h3>
+                <p>Looks sharp everywhere, from phones to ultra-wide displays.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact">
+        <div class="container">
+            &copy; <span id="year"></span> My Website. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
 </body>
 </html>
