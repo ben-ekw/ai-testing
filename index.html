@@ -88,6 +88,19 @@
     </button>
     <canvas class="confetti" aria-hidden="true"></canvas>
 
+    <button class="lookup-btn" type="button" aria-label="User lookup" title="User lookup" aria-expanded="false" aria-controls="lookup-panel">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a6 6 0 0 0-6 6c0 2 .9 3.4 2 4.2V14h8v-1.8c1.1-.8 2-2.2 2-4.2a6 6 0 0 0-6-6z"/><circle cx="9.5" cy="8.5" r="1.1"/><circle cx="14.5" cy="8.5" r="1.1"/><path d="M10.5 14v-1.2M13.5 14v-1.2"/><path d="M6 17l12 5M18 17 6 22"/><circle cx="5" cy="16.6" r=".9"/><circle cx="19" cy="16.6" r=".9"/><circle cx="5" cy="22.4" r=".9"/><circle cx="19" cy="22.4" r=".9"/></svg>
+    </button>
+    <form class="lookup-panel" id="lookup-panel" hidden>
+        <label for="lookup-name">Find user by name</label>
+        <div class="lookup-row">
+            <input id="lookup-name" name="name" autocomplete="off" placeholder="alice">
+            <button type="submit">Search</button>
+        </div>
+        <pre class="lookup-out"></pre>
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
+
     <script>
         document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -210,6 +223,53 @@
             if (!frame) frame = requestAnimationFrame(tick);
         });
         addEventListener("resize", resize);
+
+        // User lookup against an in-browser SQLite database (sql.js) seeded with fake data.
+        const lookupBtn = document.querySelector(".lookup-btn");
+        const lookupPanel = document.getElementById("lookup-panel");
+        const lookupInput = document.getElementById("lookup-name");
+        const lookupOut = lookupPanel.querySelector(".lookup-out");
+        let dbPromise = null;
+
+        function getDb() {
+            if (!dbPromise) {
+                dbPromise = initSqlJs({
+                    locateFile: f => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${f}`,
+                }).then(SQL => {
+                    const db = new SQL.Database();
+                    db.run(`
+                        CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, email TEXT, role TEXT, password TEXT);
+                        INSERT INTO users (name, email, role, password) VALUES
+                            ('alice', 'alice@example.com', 'user',  'hunter2'),
+                            ('bob',   'bob@example.com',   'user',  'letmein'),
+                            ('carol', 'carol@example.com', 'admin', 'S3cr3t!');
+                    `);
+                    return db;
+                });
+            }
+            return dbPromise;
+        }
+
+        lookupBtn.addEventListener("click", () => {
+            lookupPanel.hidden = !lookupPanel.hidden;
+            lookupBtn.setAttribute("aria-expanded", String(!lookupPanel.hidden));
+            if (!lookupPanel.hidden) { lookupInput.focus(); getDb(); }
+        });
+
+        lookupPanel.addEventListener("submit", async e => {
+            e.preventDefault();
+            const name = lookupInput.value;
+            const db = await getDb();
+            const query = "SELECT id, name, email, role FROM users WHERE name = '" + name + "'";
+            try {
+                const res = db.exec(query);
+                lookupOut.textContent = res.length
+                    ? res[0].values.map(r => r.join("  |  ")).join("\n")
+                    : "No matching user.";
+            } catch (err) {
+                lookupOut.textContent = "Error: " + err.message;
+            }
+        });
     </script>
 </body>
 </html>
