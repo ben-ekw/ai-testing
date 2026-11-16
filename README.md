@@ -1,6 +1,6 @@
 # AIwebsite
 
-A static, single-page site: light, dark and sepia themes, confetti and rain effects, and a user-lookup demo backed by an in-browser SQLite database ([sql.js](https://sql.js.org)).
+A static, single-page site with a polished landing-page layout, light/dark/sepia themes, and a minimal script footprint for a production-safe experience.
 
 ## Run locally
 
@@ -22,14 +22,14 @@ CI runs the same checks, plus `npm audit`, on every push to `main` and every pul
 
 ## Layout
 
-| Path | What it is |
-| --- | --- |
-| `index.html` | Markup, CSP and metadata |
-| `theme/theme.css` | Theme tokens and all styles (see `theme/CLAUDE.md` for font rules) |
+| Path               | What it is                                                                                               |
+| ------------------ | -------------------------------------------------------------------------------------------------------- |
+| `index.html`       | Markup, CSP and metadata                                                                                 |
+| `theme/theme.css`  | Theme tokens and all styles (see `theme/CLAUDE.md` for font rules)                                       |
 | `js/theme-init.js` | Marks the page as JS-enabled and applies the saved theme before first paint; loaded blocking in `<head>` |
-| `js/main.js` | Theme toggle, mobile menu, effects, user lookup |
-| `favicon.svg` | Site icon |
-| `_headers` | HTTP security headers for Netlify / Cloudflare Pages |
+| `js/main.js`       | Theme toggle and mobile menu behavior                                                                    |
+| `favicon.svg`      | Site icon                                                                                                |
+| `_headers`         | HTTP security headers for Netlify / Cloudflare Pages                                                     |
 
 ## Deploying
 
@@ -39,22 +39,15 @@ The headers add what a `<meta>` CSP can't: `frame-ancestors 'none'` (stops other
 
 ## Browser support
 
-The page works in all current browsers. The user lookup needs WebAssembly allowed under a CSP (`'wasm-unsafe-eval'`): Chrome/Edge 97+, Firefox 102+, Safari 16+. In older browsers the lookup says it's unavailable and the rest of the page is unaffected. The OS dark-mode theme uses `:not()` with a selector list (Chrome 88+, Firefox 84+, Safari 9+).
+The page works in all current browsers. The OS dark-mode theme uses `:not()` with a selector list (Chrome 88+, Firefox 84+, Safari 9+).
 
-With JavaScript disabled the content and navigation still work. The theme toggle, effects and lookup buttons are hidden.
+With JavaScript disabled the content and navigation still work. The theme toggle and mobile menu are hidden until JavaScript is available.
 
 ## Security notes
 
-- **No inline scripts.** The CSP allows scripts only from this origin plus the one sql.js file on cdnjs. Keep new JavaScript in `js/`. The policy lives in two places, the `<meta>` tag in `index.html` and `_headers`; keep them in sync.
-- **sql.js is integrity-checked and loaded on demand.** `js/main.js` loads `sql-wasm.js` only when someone first searches, with an SRI hash, and fetches `sql-wasm.wasm` with its own hash. To upgrade sql.js, change the version in `js/main.js`, `index.html` and `_headers`, and update both hashes:
-
-  ```sh
-  openssl dgst -sha512 -binary sql-wasm.js | openssl base64 -A
-  openssl dgst -sha512 -binary sql-wasm.wasm | openssl base64 -A
-  ```
-
-- **The lookup database is public.** It is built in the visitor's browser, so anyone can read every row. Use it for demo data only, never for real users or credentials.
+- **No external scripts for demo features.** The page keeps a minimal client-side footprint and does not load remote code for optional experiments. The CSP allows scripts only from this origin. Keep new JavaScript in `js/`. The policy lives in two places, the `<meta>` tag in `index.html` and `_headers`; keep them in sync.
+- **The page remains safe by default.** All runtime behavior is simple and local. Avoid adding demo databases, user lookups, or remote data fetches unless they are required for a real product feature.
 
 ## License
 
-[Mozilla Public License 2.0](LICENSE.txt). sql.js, loaded from cdnjs, is under its own MIT license.
+[Mozilla Public License 2.0](LICENSE.txt).

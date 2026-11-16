@@ -20,7 +20,14 @@
     --faint: rgba(20, 20, 22, 0.35);
     --graphite: #2a2a2d;
     --graphite-ring: rgba(42, 42, 45, 0.12);
-    --sheen: linear-gradient(100deg, #1a1a1c 0%, #3a3a3e 30%, #8a8a8f 48%, #3a3a3e 62%, #1a1a1c 100%);
+    --sheen: linear-gradient(
+        100deg,
+        #1a1a1c 0%,
+        #3a3a3e 30%,
+        #8a8a8f 48%,
+        #3a3a3e 62%,
+        #1a1a1c 100%
+    );
     --solid-bg: linear-gradient(180deg, #3a3a3e 0%, #1c1c1e 100%);
     --solid-border: #111113;
     --solid-text: #f4f4f2;
@@ -28,7 +35,8 @@
     --show-moon: none;
     --show-sun: none;
     --show-sepia: block;
-    --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+    --mono:
+        "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -48,7 +56,14 @@
         --faint: rgba(255, 255, 255, 0.3);
         --graphite: #d4d4d0;
         --graphite-ring: rgba(212, 212, 208, 0.15);
-        --sheen: linear-gradient(100deg, #f2f2f0 0%, #bdbdc0 30%, #6e6e73 48%, #bdbdc0 62%, #f2f2f0 100%);
+        --sheen: linear-gradient(
+            100deg,
+            #f2f2f0 0%,
+            #bdbdc0 30%,
+            #6e6e73 48%,
+            #bdbdc0 62%,
+            #f2f2f0 100%
+        );
         --solid-bg: linear-gradient(180deg, #f1f1ef 0%, #cfcfcc 100%);
         --solid-border: #e6e6e3;
         --solid-text: #18181a;
@@ -75,7 +90,14 @@
     --faint: rgba(255, 255, 255, 0.3);
     --graphite: #d4d4d0;
     --graphite-ring: rgba(212, 212, 208, 0.15);
-    --sheen: linear-gradient(100deg, #f2f2f0 0%, #bdbdc0 30%, #6e6e73 48%, #bdbdc0 62%, #f2f2f0 100%);
+    --sheen: linear-gradient(
+        100deg,
+        #f2f2f0 0%,
+        #bdbdc0 30%,
+        #6e6e73 48%,
+        #bdbdc0 62%,
+        #f2f2f0 100%
+    );
     --solid-bg: linear-gradient(180deg, #f1f1ef 0%, #cfcfcc 100%);
     --solid-border: #e6e6e3;
     --solid-text: #18181a;
@@ -101,7 +123,14 @@
     --faint: rgba(74, 52, 30, 0.4);
     --graphite: #5a3f26;
     --graphite-ring: rgba(90, 63, 38, 0.15);
-    --sheen: linear-gradient(100deg, #3b2a1a 0%, #5e4329 30%, #a8875f 48%, #5e4329 62%, #3b2a1a 100%);
+    --sheen: linear-gradient(
+        100deg,
+        #3b2a1a 0%,
+        #5e4329 30%,
+        #a8875f 48%,
+        #5e4329 62%,
+        #3b2a1a 100%
+    );
     --solid-bg: linear-gradient(180deg, #6b4b2e 0%, #43301d 100%);
     --solid-border: #34251a;
     --solid-text: #f6ecd8;
@@ -111,14 +140,29 @@
     --show-sepia: none;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-html { scroll-behavior: smooth; }
+html {
+    scroll-behavior: smooth;
+}
 
 body {
-    font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        "Segoe UI",
+        sans-serif;
     background:
-        radial-gradient(ellipse 80% 60% at 50% 0%, var(--glow) 0%, transparent 70%),
+        radial-gradient(
+            ellipse 80% 60% at 50% 0%,
+            var(--glow) 0%,
+            transparent 70%
+        ),
         linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
     background-attachment: fixed;
     color: var(--text);
@@ -130,12 +174,19 @@ body {
     display: flex;
     flex-direction: column;
 }
-main { flex: 1 0 auto; width: 100%; }
+main {
+    flex: 1 0 auto;
+    width: 100%;
+}
 
 /* "AI" in the brand name: Inter's capital I is a plain bar that reads as a lowercase l
    ("Alwebsite"), so set it in JetBrains Mono, whose I has serifs. (Google Fonts' Inter
    doesn't include Inter's serifed-I alternate, cv08.) */
-.brand-ai { font-family: var(--mono); font-weight: 500; letter-spacing: -0.02em; }
+.brand-ai {
+    font-family: var(--mono);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+}
 
 /* Precision grid backdrop */
 body::before {
@@ -147,11 +198,23 @@ body::before {
         linear-gradient(var(--hairline) 1px, transparent 1px),
         linear-gradient(90deg, var(--hairline) 1px, transparent 1px);
     background-size: 64px 64px;
-    mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 20%, transparent 80%);
-    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 20%, transparent 80%);
+    mask-image: radial-gradient(
+        ellipse 70% 60% at 50% 30%,
+        #000 20%,
+        transparent 80%
+    );
+    -webkit-mask-image: radial-gradient(
+        ellipse 70% 60% at 50% 30%,
+        #000 20%,
+        transparent 80%
+    );
 }
 
-.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
 
 /* Nav */
 nav {
@@ -176,10 +239,23 @@ nav .container {
     color: var(--text);
     text-decoration: none;
 }
-.logo span:not(.brand-ai) { color: var(--muted); font-weight: 500; }
-.logo .brand-ai { color: var(--text); }
-nav .nav-end { display: flex; align-items: center; gap: 32px; }
-nav ul { display: flex; gap: 32px; list-style: none; }
+.logo span:not(.brand-ai) {
+    color: var(--muted);
+    font-weight: 500;
+}
+.logo .brand-ai {
+    color: var(--text);
+}
+nav .nav-end {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+nav ul {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+}
 nav a.link {
     color: var(--muted);
     text-decoration: none;
@@ -189,27 +265,47 @@ nav a.link {
     text-transform: uppercase;
     transition: color 0.2s;
 }
-nav a.link:hover { color: var(--text); }
+nav a.link:hover {
+    color: var(--text);
+}
 
 /* Theme toggle */
 .theme-toggle {
     display: grid;
     place-items: center;
-    width: 36px; height: 36px;
+    width: 36px;
+    height: 36px;
     border-radius: 6px;
     border: 1px solid var(--border);
     background: var(--surface);
     box-shadow: inset 0 1px 0 var(--highlight);
     color: var(--muted);
     cursor: pointer;
-    transition: color 0.2s, border-color 0.2s;
+    transition:
+        color 0.2s,
+        border-color 0.2s;
 }
-.theme-toggle:hover { color: var(--text); border-color: var(--border-strong); }
-.theme-toggle:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
-.theme-toggle svg { width: 18px; height: 18px; }
-.theme-toggle .moon { display: var(--show-moon); }
-.theme-toggle .sun { display: var(--show-sun); }
-.theme-toggle .sepia { display: var(--show-sepia); }
+.theme-toggle:hover {
+    color: var(--text);
+    border-color: var(--border-strong);
+}
+.theme-toggle:focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+}
+.theme-toggle svg {
+    width: 18px;
+    height: 18px;
+}
+.theme-toggle .moon {
+    display: var(--show-moon);
+}
+.theme-toggle .sun {
+    display: var(--show-sun);
+}
+.theme-toggle .sepia {
+    display: var(--show-sepia);
+}
 
 /* Hero */
 .hero {
@@ -234,7 +330,8 @@ nav a.link:hover { color: var(--text); }
 .badge::before {
     content: "";
     display: inline-block;
-    width: 6px; height: 6px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: var(--graphite);
     margin-right: 10px;
@@ -257,40 +354,68 @@ h1 {
     animation: sheen 10s ease-in-out infinite;
 }
 @keyframes sheen {
-    0%, 100% { background-position: 0% center; }
-    50%      { background-position: 100% center; }
+    0%,
+    100% {
+        background-position: 0% center;
+    }
+    50% {
+        background-position: 100% center;
+    }
 }
 
 .hero p {
-    max-width: 560px;
+    max-width: 620px;
     margin: 28px auto 44px;
-    font-size: 1.15rem;
+    font-size: clamp(1.05rem, 2vw, 1.2rem);
     color: var(--muted);
 }
-.actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
 .btn {
-    padding: 13px 26px;
-    border-radius: 6px;
-    font-weight: 500;
+    min-width: 172px;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-weight: 600;
     font-size: 0.95rem;
     letter-spacing: 0.01em;
     text-decoration: none;
-    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    text-align: center;
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        background 0.2s,
+        border-color 0.2s;
 }
 .btn.primary {
     color: var(--solid-text);
     background: var(--solid-bg);
     border: 1px solid var(--solid-border);
-    box-shadow: inset 0 1px 0 var(--solid-highlight), 0 8px 20px -10px rgba(0, 0, 0, 0.5);
+    box-shadow:
+        inset 0 1px 0 var(--solid-highlight),
+        0 8px 20px -10px rgba(0, 0, 0, 0.5);
 }
-.btn.primary:hover { transform: translateY(-1px); box-shadow: inset 0 1px 0 var(--solid-highlight), 0 12px 28px -10px rgba(0, 0, 0, 0.55); }
+.btn.primary:hover {
+    transform: translateY(-1px);
+    box-shadow:
+        inset 0 1px 0 var(--solid-highlight),
+        0 12px 28px -10px rgba(0, 0, 0, 0.55);
+}
 .btn.ghost {
     color: var(--text);
     border: 1px solid var(--border);
     background: var(--surface);
-    box-shadow: inset 0 1px 0 var(--highlight), 0 2px 6px -4px rgba(0, 0, 0, 0.2);
+    box-shadow:
+        inset 0 1px 0 var(--highlight),
+        0 2px 6px -4px rgba(0, 0, 0, 0.2);
 }
-.btn.ghost:hover { transform: translateY(-1px); border-color: var(--border-strong); }
+.btn.ghost:hover {
+    transform: translateY(-1px);
+    border-color: var(--border-strong);
+}
 
 /* Features */
 .features {
@@ -301,28 +426,38 @@ h1 {
 }
 .card {
     position: relative;
+    min-height: 220px;
     padding: 32px;
-    border-radius: 8px;
+    border-radius: 10px;
     background: var(--surface);
     border: 1px solid var(--border);
-    box-shadow: inset 0 1px 0 var(--highlight), 0 10px 24px -18px rgba(0, 0, 0, 0.35);
-    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    box-shadow:
+        inset 0 1px 0 var(--highlight),
+        0 10px 24px -18px rgba(0, 0, 0, 0.35);
+    transition:
+        transform 0.25s,
+        border-color 0.25s,
+        box-shadow 0.25s;
 }
 .card:hover {
     transform: translateY(-3px);
     border-color: var(--border-strong);
-    box-shadow: inset 0 1px 0 var(--highlight), 0 18px 32px -18px rgba(0, 0, 0, 0.4);
+    box-shadow:
+        inset 0 1px 0 var(--highlight),
+        0 18px 32px -18px rgba(0, 0, 0, 0.4);
 }
 .card .index {
     position: absolute;
-    top: 20px; right: 22px;
+    top: 20px;
+    right: 22px;
     font-family: var(--mono);
     font-size: 0.7rem;
     letter-spacing: 0.1em;
     color: var(--faint);
 }
 .icon {
-    width: 44px; height: 44px;
+    width: 44px;
+    height: 44px;
     border-radius: 6px;
     display: grid;
     place-items: center;
@@ -331,9 +466,21 @@ h1 {
     background: var(--solid-bg);
     box-shadow: inset 0 1px 0 var(--solid-highlight);
 }
-.icon svg { width: 20px; height: 20px; }
-.card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; letter-spacing: -0.01em; }
-.card p { color: var(--muted); font-size: 0.95rem; }
+.icon svg {
+    width: 20px;
+    height: 20px;
+}
+.card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+}
+.card p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
 
 footer {
     border-top: 1px solid var(--border);
@@ -345,12 +492,20 @@ footer {
     font-size: 0.75rem;
     letter-spacing: 0.06em;
 }
-footer a { color: inherit; text-underline-offset: 3px; transition: color 0.2s; }
-footer a:hover { color: var(--text); }
+footer a {
+    color: inherit;
+    text-underline-offset: 3px;
+    transition: color 0.2s;
+}
+footer a:hover {
+    color: var(--text);
+}
 
 /* Below ~900px the centred footer text would sit under the fixed round buttons, so leave room for them. */
 @media (max-width: 900px) {
-    footer { padding-bottom: 108px; }
+    footer {
+        padding-bottom: 108px;
+    }
 }
 
 /* About */
@@ -366,104 +521,27 @@ footer a:hover { color: var(--text); }
     letter-spacing: -0.02em;
     margin-bottom: 12px;
 }
-.about p { color: var(--muted); }
-
-/* Floating action buttons (rain, confetti, user lookup) */
-.fab {
-    position: fixed;
-    bottom: 24px;
-    z-index: 20;
-    display: grid;
-    place-items: center;
-    width: 52px; height: 52px;
-    border-radius: 50%;
-    /* Same dark charcoal in every theme so it stays low-key */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: linear-gradient(180deg, #2a2a2d 0%, #1c1c1e 100%);
-    color: #8a8a8f;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 6px 16px -8px rgba(0, 0, 0, 0.4);
-    cursor: pointer;
-    transition: transform 0.2s, color 0.2s, box-shadow 0.2s;
-}
-.fab:hover { transform: translateY(-2px); color: #ececea; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 10px 22px -8px rgba(0, 0, 0, 0.45); }
-.fab:active { transform: translateY(0) scale(0.96); }
-.fab:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
-.fab svg { width: 22px; height: 22px; }
-.confetti-btn { right: 24px; }
-.rain-btn { right: 88px; }
-.lookup-btn { left: 24px; }
-
-/* User lookup panel */
-.lookup-panel {
-    position: fixed;
-    left: 24px;
-    bottom: 88px;
-    z-index: 20;
-    width: min(360px, calc(100vw - 48px));
-    padding: 14px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-    box-shadow: 0 12px 28px -10px rgba(0, 0, 0, 0.5);
-    font-size: 0.85rem;
-}
-.lookup-panel label { display: block; margin-bottom: 8px; color: var(--muted); }
-.lookup-row { display: flex; gap: 8px; }
-.lookup-row input {
-    flex: 1;
-    min-width: 0;
-    padding: 6px 8px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: var(--bg-deep);
-    color: var(--text);
-    font-family: var(--mono);
-}
-.lookup-row button {
-    padding: 6px 12px;
-    border-radius: 6px;
-    border: 1px solid var(--solid-border);
-    background: var(--solid-bg);
-    color: var(--solid-text);
-    cursor: pointer;
-}
-.lookup-row button:disabled { opacity: 0.6; cursor: progress; }
-.lookup-row input:focus-visible,
-.lookup-row button:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
-.lookup-out {
-    margin: 10px 0 0;
-    max-height: 160px;
-    overflow: auto;
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-}
-/* Stays rendered (not display: none) when empty so screen readers keep tracking the live region. */
-.lookup-out:empty { margin: 0; }
-
-/* Confetti & rain */
-.confetti {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 100;
-    pointer-events: none;
+.about p {
+    color: var(--muted);
 }
 
 /* Mobile menu toggle: hidden on wide screens, where the links are always shown. */
-.menu-toggle { display: none; }
+.menu-toggle {
+    display: none;
+}
 
 @media (max-width: 640px) {
-    nav .nav-end { gap: 8px; }
-    /* Without JavaScript the links stay inline; there's no menu button to reveal them. */
-    nav ul { gap: 20px; }
+    nav .nav-end {
+        gap: 8px;
+    }
+    nav ul {
+        gap: 20px;
+    }
     .js .menu-toggle {
         display: grid;
         place-items: center;
-        width: 36px; height: 36px;
+        width: 36px;
+        height: 36px;
         border-radius: 6px;
         border: 1px solid var(--border);
         background: var(--surface);
@@ -471,9 +549,18 @@ footer a:hover { color: var(--text); }
         color: var(--muted);
         cursor: pointer;
     }
-    .menu-toggle:hover { color: var(--text); border-color: var(--border-strong); }
-    .menu-toggle:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
-    .menu-toggle svg { width: 18px; height: 18px; }
+    .menu-toggle:hover {
+        color: var(--text);
+        border-color: var(--border-strong);
+    }
+    .menu-toggle:focus-visible {
+        outline: 2px solid var(--text);
+        outline-offset: 2px;
+    }
+    .menu-toggle svg {
+        width: 18px;
+        height: 18px;
+    }
     .js nav ul {
         display: none;
         position: absolute;
@@ -486,24 +573,48 @@ footer a:hover { color: var(--text); }
         border-radius: 8px;
         border: 1px solid var(--border);
         background: var(--surface);
-        box-shadow: inset 0 1px 0 var(--highlight), 0 12px 28px -10px rgba(0, 0, 0, 0.5);
+        box-shadow:
+            inset 0 1px 0 var(--highlight),
+            0 12px 28px -10px rgba(0, 0, 0, 0.5);
     }
-    .js nav.menu-open ul { display: flex; }
-    .js nav a.link { display: block; padding: 10px 12px; }
-    .hero { padding: 80px 0 70px; }
+    .js nav.menu-open ul {
+        display: flex;
+    }
+    .js nav a.link {
+        display: block;
+        padding: 10px 12px;
+    }
+    .hero {
+        padding: 80px 0 70px;
+    }
+    .actions {
+        flex-direction: column;
+    }
+    .btn {
+        width: 100%;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    h1 { animation: none; }
-    html { scroll-behavior: auto; }
-    /* The confetti and rain effects are pure motion, so they're unavailable here. */
-    .confetti-btn, .rain-btn { display: none; }
-    .fab, .btn, .card { transition: none; }
-    .fab:hover, .fab:active, .btn:hover, .card:hover { transform: none; }
+    h1 {
+        animation: none;
+    }
+    html {
+        scroll-behavior: auto;
+    }
+    .btn,
+    .card {
+        transition: none;
+    }
+    .btn:hover,
+    .card:hover {
+        transform: none;
+    }
 }
 
 /* Controls that need JavaScript are hidden until theme-init.js marks the page with .js,
    so a page without scripts doesn't show buttons that do nothing. */
 html:not(.js) .theme-toggle,
-html:not(.js) .menu-toggle,
-html:not(.js) .fab { display: none; }
+html:not(.js) .menu-toggle {
+    display: none;
+}

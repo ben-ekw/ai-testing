@@ -11,7 +11,6 @@ export default [
             sourceType: "script",
             globals: {
                 ...globals.browser,
-                initSqlJs: "readonly", // provided by sql-wasm.js from cdnjs
             },
         },
     },
