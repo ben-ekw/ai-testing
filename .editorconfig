@@ -1,0 +1,13 @@
+# Keeps editors and formatters from reflowing whole files (e.g. 4 → 2 space indents),
+# which buries real changes in diffs.
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.md]
+trim_trailing_whitespace = false

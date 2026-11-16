@@ -30,7 +30,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]):not([data-theme="sepia"]) {
+    :root:not([data-theme="light"], [data-theme="sepia"]) {
         color-scheme: dark;
         --bg: #161618;
         --bg-deep: #0e0e10;
@@ -114,7 +114,7 @@
 html { scroll-behavior: smooth; }
 
 body {
-    font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
     background:
         radial-gradient(ellipse 80% 60% at 50% 0%, var(--glow) 0%, transparent 70%),
         linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
@@ -333,12 +333,27 @@ footer {
     font-size: 0.75rem;
     letter-spacing: 0.06em;
 }
+footer a { color: inherit; text-underline-offset: 3px; transition: color 0.2s; }
+footer a:hover { color: var(--text); }
 
-/* Confetti & rain */
-.confetti-btn,
-.rain-btn {
+/* About */
+.about {
+    max-width: 640px;
+    margin: 0 auto;
+    padding-bottom: 136px;
+    text-align: center;
+}
+.about h2 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+}
+.about p { color: var(--muted); }
+
+/* Floating action buttons (rain, confetti, user lookup) */
+.fab {
     position: fixed;
-    right: 24px;
     bottom: 24px;
     z-index: 20;
     display: grid;
@@ -353,25 +368,15 @@ footer {
     cursor: pointer;
     transition: transform 0.2s, color 0.2s, box-shadow 0.2s;
 }
+.fab:hover { transform: translateY(-2px); color: #ececea; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 10px 22px -8px rgba(0, 0, 0, 0.45); }
+.fab:active { transform: translateY(0) scale(0.96); }
+.fab:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+.fab svg { width: 22px; height: 22px; }
+.confetti-btn { right: 24px; }
 .rain-btn { right: 88px; }
-.lookup-btn {
-    position: fixed;
-    left: 24px;
-    bottom: 24px;
-    z-index: 20;
-    display: grid;
-    place-items: center;
-    width: 52px; height: 52px;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: linear-gradient(180deg, #2a2a2d 0%, #1c1c1e 100%);
-    color: #8a8a8f;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 6px 16px -8px rgba(0, 0, 0, 0.4);
-    cursor: pointer;
-    transition: transform 0.2s, color 0.2s, box-shadow 0.2s;
-}
-.lookup-btn svg { width: 22px; height: 22px; }
-.lookup-btn:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+.lookup-btn { left: 24px; }
+
+/* User lookup panel */
 .lookup-panel {
     position: fixed;
     left: 24px;
@@ -414,16 +419,10 @@ footer {
     font-size: 0.75rem;
     white-space: pre;
 }
-.lookup-out:empty { display: none; }
-.lookup-btn:hover,
-.confetti-btn:hover,
-.rain-btn:hover { transform: translateY(-2px); color: #ececea; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 10px 22px -8px rgba(0, 0, 0, 0.45); }
-.confetti-btn:active,
-.rain-btn:active { transform: translateY(0) scale(0.96); }
-.confetti-btn:focus-visible,
-.rain-btn:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
-.confetti-btn svg,
-.rain-btn svg { width: 22px; height: 22px; }
+/* Stays rendered (not display: none) when empty so screen readers keep tracking the live region. */
+.lookup-out:empty { margin: 0; }
+
+/* Confetti & rain */
 .confetti {
     position: fixed;
     inset: 0;
@@ -433,12 +432,49 @@ footer {
     pointer-events: none;
 }
 
+/* Mobile menu toggle: hidden on wide screens, where the links are always shown. */
+.menu-toggle { display: none; }
+
 @media (max-width: 640px) {
-    nav ul { display: none; }
+    nav .nav-end { gap: 8px; }
+    .menu-toggle {
+        display: grid;
+        place-items: center;
+        width: 36px; height: 36px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        box-shadow: inset 0 1px 0 var(--highlight);
+        color: var(--muted);
+        cursor: pointer;
+    }
+    .menu-toggle:hover { color: var(--text); border-color: var(--border-strong); }
+    .menu-toggle:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+    .menu-toggle svg { width: 18px; height: 18px; }
+    nav ul {
+        display: none;
+        position: absolute;
+        top: 64px;
+        right: 24px;
+        flex-direction: column;
+        gap: 0;
+        min-width: 180px;
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        box-shadow: inset 0 1px 0 var(--highlight), 0 12px 28px -10px rgba(0, 0, 0, 0.5);
+    }
+    nav.menu-open ul { display: flex; }
+    nav a.link { display: block; padding: 10px 12px; }
     .hero { padding: 80px 0 70px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
     h1 { animation: none; }
     html { scroll-behavior: auto; }
+    /* The confetti and rain effects are pure motion, so they're unavailable here. */
+    .confetti-btn, .rain-btn { display: none; }
+    .fab, .btn, .card { transition: none; }
+    .fab:hover, .fab:active, .btn:hover, .card:hover { transform: none; }
 }
