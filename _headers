@@ -1,0 +1,10 @@
+# HTTP response headers for Netlify and Cloudflare Pages (both read this file).
+# Other hosts: set the same headers in their own config; see README.md.
+# Keep the Content-Security-Policy in sync with the <meta> tag in index.html. The header adds
+# frame-ancestors, which a <meta> CSP can't set.
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js 'wasm-unsafe-eval'; connect-src https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.wasm; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Strict-Transport-Security: max-age=31536000

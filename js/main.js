@@ -1,13 +1,14 @@
 document.getElementById("year").textContent = new Date().getFullYear();
 
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+const mobileNav = matchMedia("(max-width: 640px)");
 
 document.querySelector(".theme-toggle").addEventListener("click", () => {
     const root = document.documentElement;
     const current = root.dataset.theme ||
         (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    // Cycle light → dark → sepia → light; the button shows the next theme's icon.
-    const next = { light: "dark", dark: "sepia", sepia: "light" }[current];
+    // Cycle dark → light → sepia → dark; the button shows the next theme's icon.
+    const next = { dark: "light", light: "sepia", sepia: "dark" }[current];
     root.dataset.theme = next;
     try { localStorage.setItem("theme", next); } catch { /* storage blocked: theme just won't persist */ }
 });
@@ -23,17 +24,15 @@ function setMenuOpen(open) {
 
 menuToggle.addEventListener("click", () => setMenuOpen(!nav.classList.contains("menu-open")));
 nav.querySelectorAll(".link").forEach(a => a.addEventListener("click", () => setMenuOpen(false)));
-nav.addEventListener("keydown", e => {
-    if (e.key === "Escape" && nav.classList.contains("menu-open")) {
-        setMenuOpen(false);
-        menuToggle.focus();
-    }
-});
+// Leaving the mobile layout with the menu open would otherwise leave it flagged open.
+mobileNav.addEventListener("change", e => { if (!e.matches) setMenuOpen(false); });
 
 // Full-page confetti: bursts pieces up from the bottom and lets them fall under gravity.
 const canvas = document.querySelector(".confetti");
 const ctx = canvas.getContext("2d");
 const colors = ["#f94144", "#f3722c", "#f9c74f", "#90be6d", "#43aa8b", "#577590", "#9b5de5", "#f15bb5"];
+const CONFETTI_BURST = 250;
+const CONFETTI_MAX = 1000; // cap so rapid clicking can't pile up thousands of pieces
 let pieces = [];
 let frame = null;
 
@@ -112,12 +111,23 @@ function tick() {
     if (!frame) ctx.clearRect(0, 0, innerWidth, innerHeight);
 }
 
-// The effect buttons are hidden by CSS under prefers-reduced-motion; the guards below cover
-// a preference change while the page is open.
+function stopEffects() {
+    pieces = [];
+    drops = [];
+    rainUntil = 0;
+    if (frame) cancelAnimationFrame(frame);
+    frame = null;
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+}
+
+// The effect buttons are hidden by CSS under prefers-reduced-motion. If the preference turns on
+// while an effect is running, stop it; the click guards cover the moment before CSS applies.
+reducedMotion.addEventListener("change", e => { if (e.matches) stopEffects(); });
+
 document.querySelector(".confetti-btn").addEventListener("click", () => {
     if (reducedMotion.matches) return;
     resize();
-    for (let i = 0; i < 250; i++) {
+    for (let i = 0; i < CONFETTI_BURST; i++) {
         const angle = -Math.PI / 2 + (Math.random() - 0.5) * 1.4;
         const speed = 12 + Math.random() * 14;
         pieces.push({
@@ -133,6 +143,8 @@ document.querySelector(".confetti-btn").addEventListener("click", () => {
             color: colors[Math.floor(Math.random() * colors.length)],
         });
     }
+    // Drop the oldest pieces (they're furthest along their fall) beyond the cap.
+    if (pieces.length > CONFETTI_MAX) pieces.splice(0, pieces.length - CONFETTI_MAX);
     if (!frame) frame = requestAnimationFrame(tick);
 });
 document.querySelector(".rain-btn").addEventListener("click", () => {
@@ -147,20 +159,47 @@ addEventListener("resize", () => { if (frame) resize(); });
 
 // User lookup against an in-browser SQLite database (sql.js) seeded with fake, public demo data.
 // Everything here ships to the browser, so the table must never hold anything secret.
-// The WASM binary is fetched with a Subresource Integrity check and handed to sql.js directly,
-// so both the script (see the <script integrity> in index.html) and the binary are verified.
+//
+// sql.js is only downloaded on the first search, so a slow or unreachable CDN never blocks the rest
+// of the page. Both files are integrity-checked: the script via its SRI attribute, and the WASM
+// binary via fetch() with an integrity option, after which it's handed to sql.js directly.
+// If you change these URLs, update the CSP in index.html and _headers to match.
+const SQLJS_JS_URL = "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js";
+const SQLJS_JS_SRI = "sha512-+6Q7hv5pGUBXOuHWw8OdQx3ac7DzM3oJhYqz7SHDku0yl9EBdMqegoPed4GsHRoNF/VQYK2LTYewAIEBrEf/3w==";
 const SQLJS_WASM_URL = "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.wasm";
 const SQLJS_WASM_SRI = "sha512-CJH7qneqrGY0mG25MkTl5ngjoTBv3m1bJXG0OVXK/kAe2n+IZdDtdqfgbspy+ozOSjA9g8bzCkcwpcZE9jcTZA==";
 
 const lookupBtn = document.querySelector(".lookup-btn");
 const lookupPanel = document.getElementById("lookup-panel");
 const lookupInput = document.getElementById("lookup-name");
+const lookupSubmit = lookupPanel.querySelector("button[type=submit]");
 const lookupOut = lookupPanel.querySelector(".lookup-out");
 let dbPromise = null;
+let sqlJsScript = null;
+
+function loadSqlJs() {
+    if (typeof initSqlJs === "function") return Promise.resolve();
+    return new Promise((resolve, reject) => {
+        // A failed earlier attempt leaves a dead <script>; replace it so the retry re-downloads.
+        sqlJsScript?.remove();
+        sqlJsScript = document.createElement("script");
+        sqlJsScript.src = SQLJS_JS_URL;
+        sqlJsScript.integrity = SQLJS_JS_SRI;
+        sqlJsScript.crossOrigin = "anonymous";
+        sqlJsScript.referrerPolicy = "no-referrer";
+        sqlJsScript.onload = () => typeof initSqlJs === "function"
+            ? resolve()
+            : reject(new Error("sql.js loaded but initSqlJs is missing"));
+        sqlJsScript.onerror = () => reject(new Error("sql.js failed to load"));
+        document.head.append(sqlJsScript);
+    });
+}
 
 function getDb() {
     if (!dbPromise) {
-        dbPromise = fetch(SQLJS_WASM_URL, { integrity: SQLJS_WASM_SRI })
+        // Load the script first so a missing script fails fast, before the 655 KB WASM download.
+        dbPromise = loadSqlJs()
+            .then(() => fetch(SQLJS_WASM_URL, { integrity: SQLJS_WASM_SRI }))
             .then(res => {
                 if (!res.ok) throw new Error(`WASM download failed: HTTP ${res.status}`);
                 return res.arrayBuffer();
@@ -178,7 +217,7 @@ function getDb() {
                 return db;
             })
             .catch(err => {
-                dbPromise = null;
+                dbPromise = null; // allow a later search to retry
                 throw err;
             });
     }
@@ -193,21 +232,46 @@ function setLookupOpen(open) {
 
 lookupBtn.addEventListener("click", () => setLookupOpen(lookupPanel.hidden));
 
-lookupPanel.addEventListener("keydown", e => {
-    if (e.key === "Escape") {
+// Escape closes whichever popup is open, wherever focus is. Focus returns to the popup's
+// toggle only if it was inside the popup, so we never yank focus from elsewhere on the page.
+document.addEventListener("keydown", e => {
+    if (e.key !== "Escape") return;
+    if (!lookupPanel.hidden) {
+        const hadFocus = lookupPanel.contains(document.activeElement);
         setLookupOpen(false);
-        lookupBtn.focus();
+        if (hadFocus) lookupBtn.focus();
+    }
+    if (nav.classList.contains("menu-open")) {
+        const hadFocus = nav.contains(document.activeElement);
+        setMenuOpen(false);
+        if (hadFocus) menuToggle.focus();
     }
 });
 
+// Clicking outside a popup closes it.
+document.addEventListener("click", e => {
+    if (!lookupPanel.hidden && !lookupPanel.contains(e.target) && !lookupBtn.contains(e.target)) {
+        setLookupOpen(false);
+    }
+    if (nav.classList.contains("menu-open") && !nav.contains(e.target)) setMenuOpen(false);
+});
+
+function formatUser([id, name, email, role]) {
+    return `#${id} ${name} · ${email} · ${role}`;
+}
+
 lookupPanel.addEventListener("submit", async e => {
     e.preventDefault();
+    if (lookupSubmit.disabled) return; // a search is already running
     const name = lookupInput.value.trim();
     if (!name) {
         lookupOut.textContent = "Please enter a user name.";
         return;
     }
 
+    lookupSubmit.disabled = true;
+    lookupPanel.setAttribute("aria-busy", "true");
+    lookupOut.textContent = dbPromise ? "Searching…" : "Loading database…";
     try {
         const db = await getDb();
         const stmt = db.prepare("SELECT id, name, email, role FROM users WHERE name = ?");
@@ -215,14 +279,15 @@ lookupPanel.addEventListener("submit", async e => {
             stmt.bind([name]);
             const rows = [];
             while (stmt.step()) rows.push(stmt.get());
-            lookupOut.textContent = rows.length
-                ? rows.map(r => r.join("  |  ")).join("\n")
-                : "No matching user.";
+            lookupOut.textContent = rows.length ? rows.map(formatUser).join("\n") : "No matching user.";
         } finally {
             stmt.free();
         }
     } catch (err) {
         console.error("Lookup failed:", err);
         lookupOut.textContent = "Lookup is unavailable. Please try again later.";
+    } finally {
+        lookupSubmit.disabled = false;
+        lookupPanel.removeAttribute("aria-busy");
     }
 });
