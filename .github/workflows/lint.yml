@@ -23,4 +23,5 @@ jobs:
       # No dependency needs an install script, so don't run any.
       - run: npm ci --ignore-scripts
       - run: npm audit --audit-level=moderate
+      - run: npm run format:check
       - run: npm run lint

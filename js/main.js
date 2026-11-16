@@ -1,6 +1,5 @@
 document.getElementById("year").textContent = new Date().getFullYear();
 
-const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 const mobileNav = matchMedia("(max-width: 640px)");
 
 document.querySelector(".theme-toggle").addEventListener("click", () => {
@@ -8,6 +7,7 @@ document.querySelector(".theme-toggle").addEventListener("click", () => {
     const current =
         root.dataset.theme ||
         (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    // Cycle dark → light → sepia → dark; the button shows the next theme's icon.
     const next = { dark: "light", light: "sepia", sepia: "dark" }[current];
     root.dataset.theme = next;
     try {
@@ -31,10 +31,23 @@ menuToggle.addEventListener("click", () =>
 nav.querySelectorAll(".link").forEach((a) =>
     a.addEventListener("click", () => setMenuOpen(false)),
 );
+// Leaving the mobile layout with the menu open would otherwise leave it flagged open.
 mobileNav.addEventListener("change", (e) => {
     if (!e.matches) setMenuOpen(false);
 });
 
-if (reducedMotion.matches) {
-    document.documentElement.classList.add("reduced-motion");
-}
+// Escape closes the menu wherever focus is; focus returns to the toggle only if it was
+// inside the menu, so focus elsewhere on the page isn't moved.
+document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || !nav.classList.contains("menu-open")) return;
+    const hadFocus = nav.contains(document.activeElement);
+    setMenuOpen(false);
+    if (hadFocus) menuToggle.focus();
+});
+
+// Clicking outside the nav closes the menu.
+document.addEventListener("click", (e) => {
+    if (nav.classList.contains("menu-open") && !nav.contains(e.target)) {
+        setMenuOpen(false);
+    }
+});

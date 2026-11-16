@@ -494,18 +494,12 @@ footer {
 }
 footer a {
     color: inherit;
+    white-space: nowrap;
     text-underline-offset: 3px;
     transition: color 0.2s;
 }
 footer a:hover {
     color: var(--text);
-}
-
-/* Below ~900px the centred footer text would sit under the fixed round buttons, so leave room for them. */
-@media (max-width: 900px) {
-    footer {
-        padding-bottom: 108px;
-    }
 }
 
 /* About */

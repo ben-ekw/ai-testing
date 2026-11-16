@@ -15,10 +15,12 @@ python -m http.server 8000
 
 ```sh
 npm install
-npm run lint        # html-validate, stylelint and ESLint
+npm run lint          # html-validate, stylelint and ESLint
+npm run format        # format with Prettier
+npm run format:check  # what CI runs
 ```
 
-CI runs the same checks, plus `npm audit`, on every push to `main` and every pull request (`.github/workflows/lint.yml`). Dependabot opens weekly update PRs for the npm packages and the pinned GitHub Actions. Node is only used for linting; the site itself has no build step.
+CI runs the same checks, plus `npm audit` and a Prettier format check, on every push to `main` and every pull request (`.github/workflows/lint.yml`). Dependabot opens weekly update PRs for the npm packages and the pinned GitHub Actions. Node is only used for linting; the site itself has no build step.
 
 ## Layout
 
@@ -50,4 +52,4 @@ With JavaScript disabled the content and navigation still work. The theme toggle
 
 ## License
 
-[Mozilla Public License 2.0](LICENSE.txt).
+Released into the public domain under [the Unlicense](LICENSE.txt).

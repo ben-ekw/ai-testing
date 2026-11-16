@@ -1,0 +1,9 @@
+# Not formatted: generated, verbatim legal text, host config, local tool output,
+# and agent instruction files.
+LICENSE.txt
+package-lock.json
+node_modules/
+_headers
+CLAUDE.md
+CLAUDE-SECURITY-*/
+.review/

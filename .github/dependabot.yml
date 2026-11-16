@@ -8,6 +8,9 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    # Minor and patch updates are grouped into one PR. Major updates come as separate PRs,
+    # so one breaking upgrade can't block the safe ones.
     groups:
       linters:
         patterns: ["*"]
+        update-types: [minor, patch]
