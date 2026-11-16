@@ -24,14 +24,14 @@ CI runs the same checks, plus `npm audit` and a Prettier format check, on every 
 
 ## Layout
 
-| Path               | What it is                                                                                               |
-| ------------------ | -------------------------------------------------------------------------------------------------------- |
-| `index.html`       | Markup, CSP and metadata                                                                                 |
-| `theme/theme.css`  | Theme tokens and all styles (see `theme/CLAUDE.md` for font rules)                                       |
-| `js/theme-init.js` | Marks the page as JS-enabled and applies the saved theme before first paint; loaded blocking in `<head>` |
-| `js/main.js`       | Theme toggle and mobile menu behavior                                                                    |
-| `favicon.svg`      | Site icon                                                                                                |
-| `_headers`         | HTTP security headers for Netlify / Cloudflare Pages                                                     |
+| Path               | What it is                                                                   |
+| ------------------ | ---------------------------------------------------------------------------- |
+| `index.html`       | Markup, CSP and metadata                                                     |
+| `theme/theme.css`  | Theme tokens and all styles (see `theme/CLAUDE.md` for font rules)           |
+| `js/theme-init.js` | Applies the saved theme before first paint; loaded blocking in `<head>`      |
+| `js/main.js`       | Theme toggle and mobile menu behavior; reveals controls after initialization |
+| `favicon.svg`      | Site icon                                                                    |
+| `_headers`         | HTTP security headers for Netlify / Cloudflare Pages                         |
 
 ## Deploying
 
@@ -43,7 +43,7 @@ The headers add what a `<meta>` CSP can't: `frame-ancestors 'none'` (stops other
 
 The page works in all current browsers. The OS dark-mode theme uses `:not()` with a selector list (Chrome 88+, Firefox 84+, Safari 9+).
 
-With JavaScript disabled the content and navigation still work. The theme toggle and mobile menu are hidden until JavaScript is available.
+With JavaScript disabled or the main app script unavailable, the content and navigation still work. JavaScript-only controls appear after their handlers initialize.
 
 ## Security notes
 

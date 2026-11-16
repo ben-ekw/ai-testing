@@ -51,3 +51,7 @@ document.addEventListener("click", (e) => {
         setMenuOpen(false);
     }
 });
+
+// Only reveal controls after all handlers are installed. If this script fails to load,
+// mobile navigation remains visible and JavaScript-only controls stay hidden.
+document.documentElement.classList.add("app-ready");

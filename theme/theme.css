@@ -531,7 +531,7 @@ footer a:hover {
     nav ul {
         gap: 20px;
     }
-    .js .menu-toggle {
+    .app-ready .menu-toggle {
         display: grid;
         place-items: center;
         width: 36px;
@@ -555,7 +555,7 @@ footer a:hover {
         width: 18px;
         height: 18px;
     }
-    .js nav ul {
+    .app-ready nav ul {
         display: none;
         position: absolute;
         top: 64px;
@@ -571,10 +571,10 @@ footer a:hover {
             inset 0 1px 0 var(--highlight),
             0 12px 28px -10px rgba(0, 0, 0, 0.5);
     }
-    .js nav.menu-open ul {
+    .app-ready nav.menu-open ul {
         display: flex;
     }
-    .js nav a.link {
+    .app-ready nav a.link {
         display: block;
         padding: 10px 12px;
     }
@@ -606,9 +606,8 @@ footer a:hover {
     }
 }
 
-/* Controls that need JavaScript are hidden until theme-init.js marks the page with .js,
-   so a page without scripts doesn't show buttons that do nothing. */
-html:not(.js) .theme-toggle,
-html:not(.js) .menu-toggle {
+/* Keep JavaScript-only controls hidden until main.js has installed their handlers. */
+html:not(.app-ready) .theme-toggle,
+html:not(.app-ready) .menu-toggle {
     display: none;
 }
